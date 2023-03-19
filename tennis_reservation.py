@@ -279,6 +279,9 @@ class TennisCourt:
 
             date += datetime.timedelta(days=1)
 
+        if not data:
+            return False, "You don't have any appointments."
+
         if file_format == "json":
             with open(file_name, "w") as outfile:
                 json.dump(data, outfile, default=str)
@@ -289,6 +292,9 @@ class TennisCourt:
                 )
                 writer.writeheader()
                 writer.writerows(data)
+
+        return True, f"Schedule saved to {file_name}"
+
 
     def get_all_tables(self):
         with self.conn.cursor() as cursor:
@@ -309,7 +315,7 @@ class TennisCourt:
 if __name__ == "__main__":
     db_config = {
         "dbname": "tennis_court_db",
-        "user": "m",  # your pc username
+        "user": "your pc username",
         "password": "",
         "host": "localhost",
         "port": "5432",

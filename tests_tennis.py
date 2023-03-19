@@ -1,16 +1,16 @@
 import unittest
 import json
 import datetime
-from tennis_reservation import TennisCourt
 from dateutil.relativedelta import relativedelta, MO
 from unittest.mock import patch
+from tennis_reservation import TennisCourt
 
 
 class TestTennisCourt(unittest.TestCase):
     def setUp(self):
         self.db_config = {
             "dbname": "tennis_court_db",
-            "user": "m",  # <your_mac_username>
+            "user": "your pc user name ",
             "password": "",
             "host": "localhost",
             "port": "5432",
@@ -70,6 +70,16 @@ class TestTennisCourt(unittest.TestCase):
             data = json.load(infile)
             self.assertEqual(len(data), 1)
             self.assertEqual(data[0]["name"], "Milosz")
+
+    def test_try_save_schedule_with_no_reservation(self):
+        fault, message = self.tc.save_schedule(
+            datetime.datetime(2023, 3, 25),
+            datetime.datetime(2023, 3, 25),
+            "json",
+            "test_schedule.json",
+        )
+        self.assertFalse(fault)
+        self.assertIn("You don't have any appointments.", message)
 
     def test_make_reservation_conflict(self):
         reservation_date = datetime.datetime.now() + datetime.timedelta(hours=2)
